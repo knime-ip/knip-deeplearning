@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         point="org.knime.dl.DLLayerDataToDataCellConverterFactory">
+      <DLLayerDataToDataCellConverterFactory
+            DLLayerDataToDataCellConverterFactory="org.knime.ip.dl.DLDoubleLayerDataToImgPlusCellConverterFactory">
+      </DLLayerDataToDataCellConverterFactory>
+      <DLLayerDataToDataCellConverterFactory
+            DLLayerDataToDataCellConverterFactory="org.knime.ip.dl.DLFloatLayerDataToImgPlusCellConverterFactory">
+      </DLLayerDataToDataCellConverterFactory>
+   </extension>
+   <extension
+         point="org.knime.dl.DLDataValueToLayerDataConverterFactory">
+      <DLDataValueToLayerDataConverterFactory
+            DLDataValueToLayerDataConverterFactory="org.knime.ip.dl.DLImgPlusValueToDoubleLayerDataConverterFactory">
+      </DLDataValueToLayerDataConverterFactory>
+      <DLDataValueToLayerDataConverterFactory
+            DLDataValueToLayerDataConverterFactory="org.knime.ip.dl.DLImgPlusValueToFloatLayerDataConverterFactory">
+      </DLDataValueToLayerDataConverterFactory>
+   </extension>
+</plugin>
