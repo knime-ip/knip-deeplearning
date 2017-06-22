@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KNIME Image Processing - Deep Learning
+Bundle-SymbolicName: org.knime.knip.dl;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: KNIME.com GmbH
+Require-Bundle: org.knime.knip.base;bundle-version="1.5.0",
+ scijava-common;bundle-version="2.47.0",
+ imagej-common;bundle-version="0.18.0",
+ org.knime.knip.core;bundle-version="1.5.0",
+ imagej-ops;bundle-version="0.22.0",
+ org.knime.base;bundle-version="3.0.0",
+ org.knime.workbench.core;bundle-version="3.0.0",
+ imglib2;bundle-version="3.2.1",
+ imglib2-roi;bundle-version="0.4.4",
+ org.knime.dl;bundle-version="3.4.0",
+ org.knime.core;bundle-version="3.4.0"
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: knip-deeplearning.jar
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+

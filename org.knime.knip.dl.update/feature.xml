@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.knime.knip.dl.update"
+      label="KNIME Image Processing - Deep Learning"
+      version="1.0.0.qualifier"
+      provider-name="KNIME GmbH">
+
+   <includes
+         id="org.knime.knip.dl.feature"
+         version="0.0.0"/>
+
+</feature>
