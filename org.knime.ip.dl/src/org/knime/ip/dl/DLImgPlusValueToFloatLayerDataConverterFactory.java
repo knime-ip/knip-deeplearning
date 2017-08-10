@@ -2,9 +2,9 @@ package org.knime.ip.dl;
 
 import org.knime.core.data.ExtensibleUtilityFactory;
 import org.knime.dl.core.DLLayerData;
-import org.knime.dl.core.data.convert.input.DLDataValueToLayerDataConverter;
-import org.knime.dl.core.data.convert.input.DLDataValueToLayerDataConverterFactory;
-import org.knime.dl.core.data.writables.DLWritableFloatBuffer;
+import org.knime.dl.core.data.DLWritableFloatBuffer;
+import org.knime.dl.core.data.convert.DLDataValueToLayerDataConverter;
+import org.knime.dl.core.data.convert.DLDataValueToLayerDataConverterFactory;
 import org.knime.knip.base.data.img.ImgPlusValue;
 
 import net.imglib2.Cursor;
