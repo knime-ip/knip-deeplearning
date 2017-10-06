@@ -10,6 +10,7 @@ import org.knime.knip.base.data.img.ImgPlusValue;
 import net.imglib2.Cursor;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
@@ -25,7 +26,7 @@ public class DLImgPlusValueToDoubleLayerDataConverterFactory<T extends RealType<
 	 */
 	@Override
 	public String getName() {
-		return ((ExtensibleUtilityFactory) ImgPlusValue.UTILITY).getName();
+		return ((ExtensibleUtilityFactory) ImgPlusValue.UTILITY).getName();// + " (Double)";
 	}
 
 	/**
@@ -58,7 +59,7 @@ public class DLImgPlusValueToDoubleLayerDataConverterFactory<T extends RealType<
 					final Img<T> img = input.getImgPlus().getImg();
 					final double[] out;
 					if (input.getImgPlus().getImg() instanceof ArrayImg && img.firstElement() instanceof DoubleType) {
-						out = (double[]) ((ArrayImg) img).update(null);
+						out = ((DoubleArray) ((ArrayImg) img).update(null)).getCurrentStorageArray();
 					} else {
 						if (img.size() >= Integer.MAX_VALUE) {
 							throw new IllegalArgumentException(

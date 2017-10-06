@@ -10,8 +10,9 @@ import org.knime.knip.base.data.img.ImgPlusValue;
 import net.imglib2.Cursor;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.real.DoubleType;
+import net.imglib2.type.numeric.real.FloatType;
 
 /**
  * @author Christian Dietz, KNIME, Konstanz, Germany
@@ -25,7 +26,7 @@ public class DLImgPlusValueToFloatLayerDataConverterFactory<T extends RealType<T
 	 */
 	@Override
 	public String getName() {
-		return ((ExtensibleUtilityFactory) ImgPlusValue.UTILITY).getName();
+		return ((ExtensibleUtilityFactory) ImgPlusValue.UTILITY).getName();// + " (Float)";
 	}
 
 	/**
@@ -57,8 +58,8 @@ public class DLImgPlusValueToFloatLayerDataConverterFactory<T extends RealType<T
 				for (final ImgPlusValue input : inputs) {
 					final Img<T> img = input.getImgPlus().getImg();
 					final float[] out;
-					if (input.getImgPlus().getImg() instanceof ArrayImg && img.firstElement() instanceof DoubleType) {
-						out = (float[]) ((ArrayImg) img).update(null);
+					if (input.getImgPlus().getImg() instanceof ArrayImg && img.firstElement() instanceof FloatType) {
+						out = ((FloatArray) ((ArrayImg) img).update(null)).getCurrentStorageArray();
 					} else {
 						if (img.size() >= Integer.MAX_VALUE) {
 							throw new IllegalArgumentException(
