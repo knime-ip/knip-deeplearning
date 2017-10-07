@@ -2,21 +2,21 @@
 <?eclipse version="3.0"?>
 <plugin>
    <extension
-         point="org.knime.dl.DLLayerDataToDataCellConverterFactory">
-      <DLLayerDataToDataCellConverterFactory
-            DLLayerDataToDataCellConverterFactory="org.knime.ip.dl.DLDoubleLayerDataToImgPlusCellConverterFactory">
-      </DLLayerDataToDataCellConverterFactory>
-      <DLLayerDataToDataCellConverterFactory
-            DLLayerDataToDataCellConverterFactory="org.knime.ip.dl.DLFloatLayerDataToImgPlusCellConverterFactory">
-      </DLLayerDataToDataCellConverterFactory>
+         point="org.knime.dl.DLTensorToDataCellConverterFactory">
+      <DLTensorToDataCellConverterFactory
+            DLTensorToDataCellConverterFactory="org.knime.ip.dl.DLDoubleTensorToImgPlusCellConverterFactory">
+      </DLTensorToDataCellConverterFactory>
+      <DLTensorToDataCellConverterFactory
+            DLTensorToDataCellConverterFactory="org.knime.ip.dl.DLFloatTensorToImgPlusCellConverterFactory">
+      </DLTensorToDataCellConverterFactory>
    </extension>
    <extension
-         point="org.knime.dl.DLDataValueToLayerDataConverterFactory">
-      <DLDataValueToLayerDataConverterFactory
-            DLDataValueToLayerDataConverterFactory="org.knime.ip.dl.DLImgPlusValueToDoubleLayerDataConverterFactory">
-      </DLDataValueToLayerDataConverterFactory>
-      <DLDataValueToLayerDataConverterFactory
-            DLDataValueToLayerDataConverterFactory="org.knime.ip.dl.DLImgPlusValueToFloatLayerDataConverterFactory">
-      </DLDataValueToLayerDataConverterFactory>
+         point="org.knime.dl.DLDataValueToTensorConverterFactory">
+      <DLDataValueToTensorConverterFactory
+            DLDataValueToTensorConverterFactory="org.knime.ip.dl.DLImgPlusValueToDoubleTensorConverterFactory">
+      </DLDataValueToTensorConverterFactory>
+      <DLDataValueToTensorConverterFactory
+            DLDataValueToTensorConverterFactory="org.knime.ip.dl.DLImgPlusValueToFloatTensorConverterFactory">
+      </DLDataValueToTensorConverterFactory>
    </extension>
 </plugin>
