@@ -41,8 +41,25 @@ public class DLFloatTensorToImgPlusCellConverterFactory
 
 	@Override
 	public DLTensorToDataCellConverter<DLReadableFloatBuffer, ImgPlusCell<?>> createConverter() {
-		return (exec, input, out) -> out.accept(new ImgPlusCellFactory(exec)
-				.createCell(new ImgPlus<>(ArrayImgs.floats(input.getBuffer().toFloatArray(),
-						DLUtils.Shapes.getFixedShape(input.getSpec().getShape()).get()))));
+		return (exec, input, out) -> {
+			final long batchSizeLong = input.getBuffer().size();
+			final long[] shape = DLUtils.Shapes.getFixedShape(input.getSpec().getShape()).orElseThrow(
+					() -> new IllegalArgumentException("Tensor spec does not provide a fully defined shape."));
+			final long exampleSizeLong = DLUtils.Shapes.getFixedSize(input.getSpec().getShape()).getAsLong();
+			if (batchSizeLong > Integer.MAX_VALUE) {
+				throw new IllegalArgumentException(
+						"Invalid example size. Converter only supports sizes up to " + Integer.MAX_VALUE + ".");
+			}
+			final int batchSize = (int) batchSizeLong;
+			final int exampleSize = (int) exampleSizeLong;
+			final float[] batchBuffer = input.getBuffer().toFloatArray();
+			for (int i = 0; i < batchSize / exampleSize; i++) {
+				// TODO: share buffer instead of copying (or introduce partial toFloatArray method)
+				final float[] exampleBuffer = new float[(int) exampleSizeLong];
+				System.arraycopy(batchBuffer, i * exampleSize, exampleBuffer, 0, exampleSize);
+				out.accept(
+						new ImgPlusCellFactory(exec).createCell(new ImgPlus<>(ArrayImgs.floats(exampleBuffer, shape))));
+			}
+		};
 	}
 }
