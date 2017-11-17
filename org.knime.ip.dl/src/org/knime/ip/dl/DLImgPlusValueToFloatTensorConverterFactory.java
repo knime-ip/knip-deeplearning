@@ -1,5 +1,9 @@
 package org.knime.ip.dl;
 
+import java.util.List;
+import java.util.OptionalLong;
+
+import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.ExtensibleUtilityFactory;
 import org.knime.dl.core.data.DLWritableFloatBuffer;
 import org.knime.dl.core.data.convert.DLDataValueToTensorConverter;
@@ -33,6 +37,11 @@ public class DLImgPlusValueToFloatTensorConverterFactory<T extends RealType<T>>
 	@Override
 	public Class<DLWritableFloatBuffer> getBufferType() {
 		return DLWritableFloatBuffer.class;
+	}
+
+	@Override
+	public OptionalLong getDestCount(final List<DataColumnSpec> spec) {
+		return OptionalLong.empty();
 	}
 
 	@Override
