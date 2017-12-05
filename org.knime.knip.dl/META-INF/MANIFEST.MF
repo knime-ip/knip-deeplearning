@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: KNIME Image Processing - Deep Learning
+Bundle-Name: KNIME Image Processing - Deep Learning Extension
 Bundle-SymbolicName: org.knime.knip.dl;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: KNIME.com GmbH
