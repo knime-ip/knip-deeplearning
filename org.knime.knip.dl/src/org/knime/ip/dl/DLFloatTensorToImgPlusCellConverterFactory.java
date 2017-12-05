@@ -64,6 +64,8 @@ import net.imglib2.img.array.ArrayImgs;
  */
 public class DLFloatTensorToImgPlusCellConverterFactory
 		implements DLTensorToDataCellConverterFactory<DLReadableFloatBuffer, ImgPlusCell<?>> {
+	
+	private DLDimensionMapper m_dimensionMapper = new DLDimensionMapper(DLDimensionOrder.BHWC);
 
 	@Override
 	public String getName() {
@@ -104,7 +106,9 @@ public class DLFloatTensorToImgPlusCellConverterFactory
 				final float[] exampleBuffer = new float[(int) exampleSizeLong];
 				System.arraycopy(batchBuffer, i * exampleSize, exampleBuffer, 0, exampleSize);
 				out.accept(
-						new ImgPlusCellFactory(exec).createCell(new ImgPlus<>(ArrayImgs.floats(exampleBuffer, shape))));
+						new ImgPlusCellFactory(exec).createCell(m_dimensionMapper.mapDimensionsFromDL(
+								new ImgPlus<>(
+										ArrayImgs.floats(exampleBuffer, m_dimensionMapper.getKNIPShape(shape))))));
 			}
 		};
 	}
