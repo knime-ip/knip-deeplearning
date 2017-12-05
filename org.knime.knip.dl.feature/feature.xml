@@ -730,6 +730,7 @@ propagated with or for interoperation with KNIME.
    <requires>
       <import feature="org.knime.features.dl.keras" version="3.5.0" match="greaterOrEqual"/>
       <import feature="org.knime.features.python2" version="3.5.0.v201712011506"/>
+      <import feature="org.knime.knip.knimepython.feature" version="1.0.7.qualifier"/>
    </requires>
 
    <plugin
