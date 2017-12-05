@@ -46,9 +46,11 @@
 
 package org.knime.ip.dl;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalLong;
 
+import org.eclipse.draw2d.Cursors;
 import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.ExtensibleUtilityFactory;
 import org.knime.dl.core.data.DLWritableFloatBuffer;
@@ -56,12 +58,16 @@ import org.knime.dl.core.data.convert.DLDataValueToTensorConverter;
 import org.knime.dl.core.data.convert.DLDataValueToTensorConverterFactory;
 import org.knime.knip.base.data.img.ImgPlusValue;
 
+import net.imagej.ImgPlus;
 import net.imglib2.Cursor;
+import net.imglib2.IterableInterval;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.view.Views;
 
 /**
  * @author Christian Dietz, KNIME, Konstanz, Germany
@@ -69,7 +75,10 @@ import net.imglib2.type.numeric.real.FloatType;
  */
 public class DLImgPlusValueToFloatTensorConverterFactory<T extends RealType<T>>
 		implements DLDataValueToTensorConverterFactory<ImgPlusValue, DLWritableFloatBuffer> {
-
+	
+	// TODO: pull into abstract super class or at least set via constructor
+	private final DLDimensionMapper m_dimMapper = new DLDimensionMapper(DLDimensionOrder.BHWC);
+	
 	@Override
 	public String getName() {
 		return ((ExtensibleUtilityFactory) ImgPlusValue.UTILITY).getName();
@@ -94,23 +103,28 @@ public class DLImgPlusValueToFloatTensorConverterFactory<T extends RealType<T>>
 	public DLDataValueToTensorConverter<ImgPlusValue, DLWritableFloatBuffer> createConverter() {
 		return (inputs, output) -> {
 			for (final ImgPlusValue input : inputs) {
-				final Img<T> img = input.getImgPlus().getImg();
+//				final Img<T> img = input.getImgPlus().getImg();
 				final float[] out;
-				if (input.getImgPlus().getImg() instanceof ArrayImg && img.firstElement() instanceof FloatType) {
-					out = ((FloatArray) ((ArrayImg) img).update(null)).getCurrentStorageArray();
-				} else {
-					if (img.size() >= Integer.MAX_VALUE) {
+				ImgPlus imgPlus = input.getImgPlus();
+				RandomAccessibleInterval<T> permuted = m_dimMapper.mapDimensionsToDL(imgPlus);
+				IterableInterval<T> iterableInterval = Views.flatIterable(permuted);
+//				assert imgPlus.iterationOrder().equals(iterableInterval.iterationOrder());
+				
+//				if (input.getImgPlus().getImg() instanceof ArrayImg && img.firstElement() instanceof FloatType) {
+//					out = ((FloatArray) ((ArrayImg) img).update(null)).getCurrentStorageArray();
+//				} else {
+					if (imgPlus.size() >= Integer.MAX_VALUE) {
 						throw new IllegalArgumentException(
 								"Can't process images with more than Integer.MAX_VALUE pixels, yet.");
 					}
 					// TODO can be parallelized
 					// TODO consider iteration order
-					out = new float[(int) img.size()];
-					final Cursor<T> c = img.cursor();
+					out = new float[(int) imgPlus.size()];
+					final Cursor<T> c = iterableInterval.cursor();
 					for (int i = 0; i < out.length; i++) {
 						out[i] = c.next().getRealFloat();
 					}
-				}
+//				}
 				output.getBuffer().putAll(out);
 			}
 		};
