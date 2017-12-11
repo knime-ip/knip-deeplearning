@@ -5,18 +5,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.knime.knip.core.ops.metadata.DimSwapper;
-
 import net.imagej.ImgPlus;
 import net.imagej.axis.Axes;
 import net.imagej.axis.AxisType;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.Img;
 import net.imglib2.img.ImgView;
-import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
 class DLDimensionMapper {
+	
+	private static final int NUM_SUPPORTED_AXIS = 5;
 
 	private final Map<AxisType, Integer> m_dimMapping;
 	private final DLDimensionOrder m_dimOrder;
@@ -71,10 +69,23 @@ class DLDimensionMapper {
 		}
 	}
 	
+	public long[] getDLShape(ImgPlus<?> img) {
+		long[] shape = new long[img.numDimensions()];
+		int[] mapping = inferMapping(img);
+		assert shape.length == mapping.length : "Shape and mapping have different dimensionality.";
+		for (int d = 0; d < mapping.length; d++) {
+			// the mapping indicates how to alter the memory layout of the img
+			// the layout in dl is interpreted from the back i.e. in BHWC the channel changes fastest
+			// in KNIP the layout is interpreted from the front i.e. in XYC X changes fastest
+			shape[mapping.length - mapping[d] - 1] = img.dimension(d);
+		}
+		return shape;
+	}
+	
 	private int[] inferMapping(ImgPlus<?> img) {
 		int[] mapping = new int[img.numDimensions()];
 		// keeps track where we put the corresponding dimension
-		int[] pos = new int[5];
+		int[] pos = new int[NUM_SUPPORTED_AXIS];
 		// -1 indicates that we haven't seen the dimension yet
 		Arrays.fill(pos, -1);
 		// recognize img dimensions
