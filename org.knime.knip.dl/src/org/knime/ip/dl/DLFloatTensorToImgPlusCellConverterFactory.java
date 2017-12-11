@@ -46,6 +46,8 @@
 
 package org.knime.ip.dl;
 
+import java.util.OptionalLong;
+
 import org.knime.core.data.DataType;
 import org.knime.dl.core.DLTensorSpec;
 import org.knime.dl.core.data.DLReadableFloatBuffer;
@@ -65,7 +67,7 @@ import net.imglib2.img.array.ArrayImgs;
 public class DLFloatTensorToImgPlusCellConverterFactory
 		implements DLTensorToDataCellConverterFactory<DLReadableFloatBuffer, ImgPlusCell<?>> {
 	
-	private DLDimensionMapper m_dimensionMapper = new DLDimensionMapper(DLDimensionOrder.BHWC);
+	private DLDimensionMapper m_dimensionMapper = new DLDimensionMapper(DLDimensionOrder.BTDHWC);
 
 	@Override
 	public String getName() {
@@ -83,8 +85,8 @@ public class DLFloatTensorToImgPlusCellConverterFactory
 	}
 
 	@Override
-	public long getDestCount(final DLTensorSpec spec) {
-		return 1;
+	public OptionalLong getDestCount(final DLTensorSpec spec) {
+		return OptionalLong.of(1);
 	}
 
 	@Override
