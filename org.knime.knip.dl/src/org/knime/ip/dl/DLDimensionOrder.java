@@ -16,12 +16,14 @@ package org.knime.ip.dl;
 public enum DLDimensionOrder {
 	
 	/**
+	 * Stands for <b>B</b>atch-<b>T</b>ime-<b>D</b>epth-<b>H</b>eight-<b>W</b>idth-<b>C</b>hannel.
 	 * Corresponds to CXY in KNIP.
 	 */
-	BHWC,
+	BTDHWC,
 	/**
+	 * Stands for <b>B</b>atch-<b>T</b>ime-<b>C</b>hannel-<b>D</b>epth-<b>H</b>eight-<b>W</b>idth.
 	 * Corresponds to XYC in KNIP.
 	 */
-	BCHW;
+	BTCDHW;
 
 }
