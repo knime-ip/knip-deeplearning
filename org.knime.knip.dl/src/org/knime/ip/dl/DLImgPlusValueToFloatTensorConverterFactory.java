@@ -53,7 +53,9 @@ import java.util.OptionalLong;
 import org.eclipse.draw2d.Cursors;
 import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.ExtensibleUtilityFactory;
+import org.knime.dl.core.DLTensor;
 import org.knime.dl.core.data.DLWritableFloatBuffer;
+import org.knime.dl.core.data.convert.DLAbstractTensorDataValueToTensorConverter;
 import org.knime.dl.core.data.convert.DLDataValueToTensorConverter;
 import org.knime.dl.core.data.convert.DLDataValueToTensorConverterFactory;
 import org.knime.knip.base.data.img.ImgPlusValue;
@@ -77,7 +79,7 @@ public class DLImgPlusValueToFloatTensorConverterFactory<T extends RealType<T>>
 		implements DLDataValueToTensorConverterFactory<ImgPlusValue, DLWritableFloatBuffer> {
 	
 	// TODO: pull into abstract super class or at least set via constructor
-	private final DLDimensionMapper m_dimMapper = new DLDimensionMapper(DLDimensionOrder.BHWC);
+	private final DLDimensionMapper m_dimMapper = new DLDimensionMapper(DLDimensionOrder.BTDHWC);
 	
 	@Override
 	public String getName() {
@@ -101,32 +103,36 @@ public class DLImgPlusValueToFloatTensorConverterFactory<T extends RealType<T>>
 
 	@Override
 	public DLDataValueToTensorConverter<ImgPlusValue, DLWritableFloatBuffer> createConverter() {
-		return (inputs, output) -> {
-			for (final ImgPlusValue input : inputs) {
-//				final Img<T> img = input.getImgPlus().getImg();
-				final float[] out;
-				ImgPlus imgPlus = input.getImgPlus();
-				RandomAccessibleInterval<T> permuted = m_dimMapper.mapDimensionsToDL(imgPlus);
-				IterableInterval<T> iterableInterval = Views.flatIterable(permuted);
-//				assert imgPlus.iterationOrder().equals(iterableInterval.iterationOrder());
-				
-//				if (input.getImgPlus().getImg() instanceof ArrayImg && img.firstElement() instanceof FloatType) {
-//					out = ((FloatArray) ((ArrayImg) img).update(null)).getCurrentStorageArray();
-//				} else {
-					if (imgPlus.size() >= Integer.MAX_VALUE) {
-						throw new IllegalArgumentException(
-								"Can't process images with more than Integer.MAX_VALUE pixels, yet.");
-					}
-					// TODO can be parallelized
-					// TODO consider iteration order
-					out = new float[(int) imgPlus.size()];
-					final Cursor<T> c = iterableInterval.cursor();
-					for (int i = 0; i < out.length; i++) {
-						out[i] = c.next().getRealFloat();
-					}
-//				}
-				output.getBuffer().putAll(out);
+		return new DLAbstractTensorDataValueToTensorConverter<ImgPlusValue, DLWritableFloatBuffer>() {
+
+			@Override
+			public void convert(Iterable<? extends ImgPlusValue> inputs, DLTensor<DLWritableFloatBuffer> output) {
+				for (final ImgPlusValue input : inputs) {
+					final float[] out;
+					ImgPlus imgPlus = input.getImgPlus();
+					RandomAccessibleInterval<T> permuted = m_dimMapper.mapDimensionsToDL(imgPlus);
+					IterableInterval<T> iterableInterval = Views.flatIterable(permuted);
+						if (imgPlus.size() >= Integer.MAX_VALUE) {
+							throw new IllegalArgumentException(
+									"Can't process images with more than Integer.MAX_VALUE pixels, yet.");
+						}
+						// TODO can be parallelized
+						// TODO consider iteration order
+						out = new float[(int) imgPlus.size()];
+						final Cursor<T> c = iterableInterval.cursor();
+						for (int i = 0; i < out.length; i++) {
+							out[i] = c.next().getRealFloat();
+						}
+//					}
+					output.getBuffer().putAll(out);
+				}
+			}
+
+			@Override
+			protected long[] getShapeInternal(ImgPlusValue element) {
+				return m_dimMapper.getDLShape(element.getImgPlus());
 			}
 		};
 	}
+				
 }
