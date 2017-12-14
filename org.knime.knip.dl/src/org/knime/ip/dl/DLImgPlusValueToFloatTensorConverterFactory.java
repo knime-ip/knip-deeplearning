@@ -106,26 +106,24 @@ public class DLImgPlusValueToFloatTensorConverterFactory<T extends RealType<T>>
 		return new DLAbstractTensorDataValueToTensorConverter<ImgPlusValue, DLWritableFloatBuffer>() {
 
 			@Override
-			public void convert(Iterable<? extends ImgPlusValue> inputs, DLTensor<DLWritableFloatBuffer> output) {
-				for (final ImgPlusValue input : inputs) {
-					final float[] out;
-					ImgPlus imgPlus = input.getImgPlus();
-					RandomAccessibleInterval<T> permuted = m_dimMapper.mapDimensionsToDL(imgPlus);
-					IterableInterval<T> iterableInterval = Views.flatIterable(permuted);
-						if (imgPlus.size() >= Integer.MAX_VALUE) {
-							throw new IllegalArgumentException(
-									"Can't process images with more than Integer.MAX_VALUE pixels, yet.");
-						}
-						// TODO can be parallelized
-						// TODO consider iteration order
-						out = new float[(int) imgPlus.size()];
-						final Cursor<T> c = iterableInterval.cursor();
-						for (int i = 0; i < out.length; i++) {
-							out[i] = c.next().getRealFloat();
-						}
-//					}
-					output.getBuffer().putAll(out);
+			public void convertInternal(ImgPlusValue input, DLTensor<DLWritableFloatBuffer> output) {
+				final float[] out;
+				ImgPlus imgPlus = input.getImgPlus();
+				RandomAccessibleInterval<T> permuted = m_dimMapper.mapDimensionsToDL(imgPlus);
+				IterableInterval<T> iterableInterval = Views.flatIterable(permuted);
+				if (imgPlus.size() >= Integer.MAX_VALUE) {
+					throw new IllegalArgumentException(
+							"Can't process images with more than Integer.MAX_VALUE pixels, yet.");
 				}
+				// TODO can be parallelized
+				// TODO consider iteration order
+				out = new float[(int) imgPlus.size()];
+				final Cursor<T> c = iterableInterval.cursor();
+				for (int i = 0; i < out.length; i++) {
+					out[i] = c.next().getRealFloat();
+				}
+				output.getBuffer().putAll(out);
+
 			}
 
 			@Override
