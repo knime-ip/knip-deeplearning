@@ -5,7 +5,10 @@ import java.util.OptionalLong;
 
 import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.ExtensibleUtilityFactory;
+import org.knime.dl.core.DLTensor;
 import org.knime.dl.core.data.DLWritableFloatBuffer;
+import org.knime.dl.core.data.convert.DLAbstractTensorDataValueToTensorConverter;
+import org.knime.dl.core.data.convert.DLAbstractTensorDataValueToTensorConverterFactory;
 import org.knime.dl.core.data.convert.DLDataValueToTensorConverter;
 import org.knime.dl.core.data.convert.DLDataValueToTensorConverterFactory;
 import org.knime.knip.base.data.img.ImgPlusValue;
@@ -22,6 +25,7 @@ import net.imglib2.type.numeric.real.FloatType;
  * @author Marcel Wiedenmann, KNIME, Konstanz, Germany
  */
 public class DLImgPlusValueToFloatTensorConverterFactory<T extends RealType<T>>
+	extends DLAbstractTensorDataValueToTensorConverterFactory<ImgPlusValue, DLWritableFloatBuffer>
 		implements DLDataValueToTensorConverterFactory<ImgPlusValue, DLWritableFloatBuffer> {
 
 	@Override
@@ -46,11 +50,13 @@ public class DLImgPlusValueToFloatTensorConverterFactory<T extends RealType<T>>
 
 	@Override
 	public DLDataValueToTensorConverter<ImgPlusValue, DLWritableFloatBuffer> createConverter() {
-		return (inputs, output) -> {
-			for (final ImgPlusValue input : inputs) {
-				final Img<T> img = input.getImgPlus().getImg();
+		return new DLAbstractTensorDataValueToTensorConverter<ImgPlusValue, DLWritableFloatBuffer>() {
+
+			@Override
+			protected void convertInternal(final ImgPlusValue element, final DLTensor<DLWritableFloatBuffer> output) {
+				final Img<T> img = element.getImgPlus().getImg();
 				final float[] out;
-				if (input.getImgPlus().getImg() instanceof ArrayImg && img.firstElement() instanceof FloatType) {
+				if (img instanceof ArrayImg && img.firstElement() instanceof FloatType) {
 					out = ((FloatArray) ((ArrayImg) img).update(null)).getCurrentStorageArray();
 				} else {
 					if (img.size() >= Integer.MAX_VALUE) {
@@ -68,5 +74,10 @@ public class DLImgPlusValueToFloatTensorConverterFactory<T extends RealType<T>>
 				output.getBuffer().putAll(out);
 			}
 		};
+	}
+
+	@Override
+	protected long[] getDataShapeInternal(final ImgPlusValue element) {
+		return element.getDimensions();
 	}
 }

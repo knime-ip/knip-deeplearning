@@ -1,5 +1,8 @@
 package org.knime.ip.dl;
 
+import java.io.IOException;
+import java.util.OptionalLong;
+
 import org.knime.core.data.DataType;
 import org.knime.dl.core.DLTensorSpec;
 import org.knime.dl.core.data.DLReadableDoubleBuffer;
@@ -19,6 +22,8 @@ import net.imglib2.img.array.ArrayImgs;
 public class DLDoubleTensorToImgPlusCellConverterFactory
 		implements DLTensorToDataCellConverterFactory<DLReadableDoubleBuffer, ImgPlusCell<?>> {
 
+	private static final OptionalLong DEST_COUNT = OptionalLong.of(1);
+
 	@Override
 	public String getName() {
 		return DataType.getType(ImgPlusCell.class).toPrettyString();
@@ -35,30 +40,36 @@ public class DLDoubleTensorToImgPlusCellConverterFactory
 	}
 
 	@Override
-	public long getDestCount(final DLTensorSpec spec) {
-		return 1;
+	public OptionalLong getDestCount(final DLTensorSpec spec) {
+		return DEST_COUNT;
 	}
 
 	@Override
 	public DLTensorToDataCellConverter<DLReadableDoubleBuffer, ImgPlusCell<?>> createConverter() {
-		return (exec, input, out) -> {
+		return (input, out, exec) -> {
 			final long batchSizeLong = input.getBuffer().size();
+			if (batchSizeLong > Integer.MAX_VALUE) {
+				throw new IllegalArgumentException("Invalid batch size. Converter only supports sizes up to 2^31-1.");
+			}
+			final int batchSize = (int) batchSizeLong;
 			final long[] shape = DLUtils.Shapes.getFixedShape(input.getSpec().getShape()).orElseThrow(
 					() -> new IllegalArgumentException("Tensor spec does not provide a fully defined shape."));
 			final long exampleSizeLong = DLUtils.Shapes.getFixedSize(input.getSpec().getShape()).getAsLong();
-			if (batchSizeLong > Integer.MAX_VALUE) {
-				throw new IllegalArgumentException(
-						"Invalid example size. Converter only supports sizes up to " + Integer.MAX_VALUE + ".");
+			if (exampleSizeLong > Integer.MAX_VALUE) {
+				throw new IllegalArgumentException("Invalid example size. Converter only supports sizes up to 2^31-1.");
 			}
-			final int batchSize = (int) batchSizeLong;
 			final int exampleSize = (int) exampleSizeLong;
 			final double[] batchBuffer = input.getBuffer().toDoubleArray();
 			for (int i = 0; i < batchSize / exampleSize; i++) {
-				// TODO: share buffer instead of copying (or introduce partial toDoubleArray method)
+				// TODO: share buffer instead of copying (- or introduce partial toDoubleArray method)
 				final double[] exampleBuffer = new double[(int) exampleSizeLong];
 				System.arraycopy(batchBuffer, i * exampleSize, exampleBuffer, 0, exampleSize);
-				out.accept(new ImgPlusCellFactory(exec)
-						.createCell(new ImgPlus<>(ArrayImgs.doubles(exampleBuffer, shape))));
+				try {
+					out[i] = new ImgPlusCellFactory(exec)
+							.createCell(new ImgPlus<>(ArrayImgs.doubles(exampleBuffer, shape)));
+				} catch (final IOException e) {
+					throw new RuntimeException(e);
+				}
 			}
 		};
 	}

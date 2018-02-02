@@ -5,7 +5,10 @@ import java.util.OptionalLong;
 
 import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.ExtensibleUtilityFactory;
+import org.knime.dl.core.DLTensor;
 import org.knime.dl.core.data.DLWritableDoubleBuffer;
+import org.knime.dl.core.data.convert.DLAbstractTensorDataValueToTensorConverter;
+import org.knime.dl.core.data.convert.DLAbstractTensorDataValueToTensorConverterFactory;
 import org.knime.dl.core.data.convert.DLDataValueToTensorConverter;
 import org.knime.dl.core.data.convert.DLDataValueToTensorConverterFactory;
 import org.knime.knip.base.data.img.ImgPlusValue;
@@ -22,6 +25,7 @@ import net.imglib2.type.numeric.real.DoubleType;
  * @author Marcel Wiedenmann, KNIME, Konstanz, Germany
  */
 public class DLImgPlusValueToDoubleTensorConverterFactory<T extends RealType<T>>
+	extends DLAbstractTensorDataValueToTensorConverterFactory<ImgPlusValue, DLWritableDoubleBuffer>
 		implements DLDataValueToTensorConverterFactory<ImgPlusValue, DLWritableDoubleBuffer> {
 
 	@Override
@@ -46,11 +50,13 @@ public class DLImgPlusValueToDoubleTensorConverterFactory<T extends RealType<T>>
 
 	@Override
 	public DLDataValueToTensorConverter<ImgPlusValue, DLWritableDoubleBuffer> createConverter() {
-		return (inputs, output) -> {
-			for (final ImgPlusValue input : inputs) {
-				final Img<T> img = input.getImgPlus().getImg();
+		return new DLAbstractTensorDataValueToTensorConverter<ImgPlusValue, DLWritableDoubleBuffer>() {
+
+			@Override
+			protected void convertInternal(final ImgPlusValue element, final DLTensor<DLWritableDoubleBuffer> output) {
+				final Img<T> img = element.getImgPlus().getImg();
 				final double[] out;
-				if (input.getImgPlus().getImg() instanceof ArrayImg && img.firstElement() instanceof DoubleType) {
+				if (img instanceof ArrayImg && img.firstElement() instanceof DoubleType) {
 					out = ((DoubleArray) ((ArrayImg) img).update(null)).getCurrentStorageArray();
 				} else {
 					if (img.size() >= Integer.MAX_VALUE) {
@@ -68,5 +74,10 @@ public class DLImgPlusValueToDoubleTensorConverterFactory<T extends RealType<T>>
 				output.getBuffer().putAll(out);
 			}
 		};
+	}
+
+	@Override
+	protected long[] getDataShapeInternal(final ImgPlusValue element) {
+		return element.getDimensions();
 	}
 }
