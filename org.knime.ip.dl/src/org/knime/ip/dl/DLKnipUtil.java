@@ -1,15 +1,16 @@
 package org.knime.ip.dl;
 
-import java.util.Arrays;
-
 import org.knime.dl.core.DLDefaultDimensionOrders;
 import org.knime.dl.core.DLDimension;
 import org.knime.dl.core.DLTensorSpec;
 import org.knime.dl.util.DLUtils;
 import org.knime.knip.base.data.img.ImgPlusValue;
+import org.knime.knip.core.ops.metadata.DimSwapper;
 
 import net.imagej.ImgPlusMetadata;
 import net.imagej.axis.CalibratedAxis;
+import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.type.numeric.RealType;
 
 final class DLKnipUtil {
 
@@ -17,15 +18,28 @@ final class DLKnipUtil {
 		// utility class
 	}
 	
-	public static long[] getShapeFromImg(final ImgPlusValue img, final DLTensorSpec tensorSpec) {
+	public static <T extends RealType<T>> RandomAccessibleInterval<T> mapImgToDL(ImgPlusValue<T> img, DLTensorSpec tensorSpec) {
+		int[] mapping = calculateMapping(img, tensorSpec);
+		return DimSwapper.swap(img.getImgPlus(), mapping);
+	}
+	
+	private static DLDimension[] extractDimensionOrder(DLTensorSpec tensorSpec) {
 		if (tensorSpec.getDimensionOrder() == DLDefaultDimensionOrders.Unknown) {
 			throw new IllegalArgumentException(
 					"Can't infer shape from image if the dimension order of the input tensor is unknown");
 		}
-		DLDimension[] tensorDimensionOrder = tensorSpec.getDimensionOrder().getDimensions();
-		DLDimension[] imgDimensionOrder = getDimensionOrder(getAxes(img.getMetadata()));
-		int[] mapping = DLUtils.Dimensions.getMapping(imgDimensionOrder, tensorDimensionOrder);
+		return tensorSpec.getDimensionOrder().getDimensions();
+	}
+	
+	public static <T extends RealType<T>> long[] getShapeFromImg(final ImgPlusValue<T> img, final DLTensorSpec tensorSpec) {
+		int[] mapping = calculateMapping(img, tensorSpec);
 		return mapShape(img.getDimensions(), mapping);
+	}
+	
+	private static <T extends RealType<T>> int[] calculateMapping(final ImgPlusValue<T> img, DLTensorSpec tensorSpec) {
+		DLDimension[] tensorDimensionOrder = extractDimensionOrder(tensorSpec);
+		DLDimension[] imgDimensionOrder = getDimensionOrder(getAxes(img.getMetadata()));
+		return DLUtils.Dimensions.getMapping(imgDimensionOrder, tensorDimensionOrder);
 	}
 	
 	private static long[] mapShape(final long[] imgShape, final int[] mapping) {
@@ -38,7 +52,13 @@ final class DLKnipUtil {
 	}
 	
 	private static DLDimension[] getDimensionOrder(CalibratedAxis[] axes) {
-		return Arrays.stream(axes).map(DLKnipUtil::axisToDimension).toArray(i -> new DLDimension[i]);
+		DLDimension[] dimOrder = new DLDimension[axes.length];
+		for (int i = 0; i < axes.length; i++) {
+			// in KNIP the last dimension changes the slowest (e.g. C in XYC) while
+			// in deep learning (especially TensorFlow) the last dimension changes the fastest.
+			dimOrder[i] = axisToDimension(axes[axes.length - i - 1]);
+		}
+		return dimOrder;
 	}
 	
 	private static CalibratedAxis[] getAxes(final ImgPlusMetadata metaData) {
