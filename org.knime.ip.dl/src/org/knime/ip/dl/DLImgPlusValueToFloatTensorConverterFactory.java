@@ -6,6 +6,7 @@ import java.util.OptionalLong;
 import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.ExtensibleUtilityFactory;
 import org.knime.dl.core.DLTensor;
+import org.knime.dl.core.DLTensorSpec;
 import org.knime.dl.core.data.DLWritableFloatBuffer;
 import org.knime.dl.core.data.convert.DLAbstractTensorDataValueToTensorConverter;
 import org.knime.dl.core.data.convert.DLAbstractTensorDataValueToTensorConverterFactory;
@@ -77,7 +78,7 @@ public class DLImgPlusValueToFloatTensorConverterFactory<T extends RealType<T>>
 	}
 
 	@Override
-	protected long[] getDataShapeInternal(final ImgPlusValue element) {
+	protected long[] getDataShapeInternal(final ImgPlusValue element, final DLTensorSpec tensorSpec) {
 		return element.getDimensions();
 	}
 }
