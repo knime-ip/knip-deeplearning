@@ -1,9 +1,9 @@
 package org.knime.ip.dl;
 
-import org.knime.dl.core.DLDefaultDimensionOrders;
+import org.knime.dl.core.DLDefaultDimensionOrder;
 import org.knime.dl.core.DLDimension;
+import org.knime.dl.core.DLDimensionOrder;
 import org.knime.dl.core.DLTensorSpec;
-import org.knime.dl.util.DLUtils;
 import org.knime.knip.base.data.img.ImgPlusValue;
 import org.knime.knip.core.ops.metadata.DimSwapper;
 
@@ -23,12 +23,12 @@ final class DLKnipUtil {
 		return DimSwapper.swap(img.getImgPlus(), mapping);
 	}
 	
-	private static DLDimension[] extractDimensionOrder(DLTensorSpec tensorSpec) {
-		if (tensorSpec.getDimensionOrder() == DLDefaultDimensionOrders.Unknown) {
+	private static DLDimensionOrder extractDimensionOrder(DLTensorSpec tensorSpec) {
+		if (tensorSpec.getDimensionOrder() == DLDefaultDimensionOrder.Unknown) {
 			throw new IllegalArgumentException(
 					"Can't infer shape from image if the dimension order of the input tensor is unknown");
 		}
-		return tensorSpec.getDimensionOrder().getDimensions();
+		return tensorSpec.getDimensionOrder();
 	}
 	
 	public static <T extends RealType<T>> long[] getShapeFromImg(final ImgPlusValue<T> img, final DLTensorSpec tensorSpec) {
@@ -37,9 +37,9 @@ final class DLKnipUtil {
 	}
 	
 	private static <T extends RealType<T>> int[] calculateMapping(final ImgPlusValue<T> img, DLTensorSpec tensorSpec) {
-		DLDimension[] tensorDimensionOrder = extractDimensionOrder(tensorSpec);
+		DLDimensionOrder tensorDimensionOrder = extractDimensionOrder(tensorSpec);
 		DLDimension[] imgDimensionOrder = getDimensionOrder(getAxes(img.getMetadata()));
-		return DLUtils.Dimensions.getMapping(imgDimensionOrder, tensorDimensionOrder);
+		return tensorDimensionOrder.inferMappingFor(imgDimensionOrder);
 	}
 	
 	private static long[] mapShape(final long[] imgShape, final int[] mapping) {
