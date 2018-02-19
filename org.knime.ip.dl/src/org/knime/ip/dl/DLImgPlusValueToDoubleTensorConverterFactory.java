@@ -5,7 +5,9 @@ import java.util.OptionalLong;
 
 import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.ExtensibleUtilityFactory;
+import org.knime.dl.core.DLFixedTensorShape;
 import org.knime.dl.core.DLTensor;
+import org.knime.dl.core.DLTensorShape;
 import org.knime.dl.core.DLTensorSpec;
 import org.knime.dl.core.data.DLWritableDoubleBuffer;
 import org.knime.dl.core.data.convert.DLAbstractTensorDataValueToTensorConverter;
@@ -79,6 +81,10 @@ public class DLImgPlusValueToDoubleTensorConverterFactory<T extends RealType<T>>
 
 	@Override
 	protected long[] getDataShapeInternal(final ImgPlusValue element, final DLTensorSpec tensorSpec) {
-		return element.getDimensions();
+		DLTensorShape shape = tensorSpec.getShape();
+		if (shape instanceof DLFixedTensorShape) {
+			return ((DLFixedTensorShape)shape).getShape();
+		}
+		throw new IllegalArgumentException("This converter can not be used with networks that contain partial shapes.");
 	}
 }
