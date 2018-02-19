@@ -14,8 +14,8 @@ import net.imglib2.type.numeric.RealType;
  * @param <T> 
  *
  */
-public class DLImgPlusValueToFloatTensorConverterFactory2 <T extends RealType<T>>
-		extends DLAbstractImgPlusValueToTensorConverterFactory<DLWritableFloatBuffer> {
+public class DLAutoMappingImgPlusValueToFloatTensorConverterFactory <T extends RealType<T>>
+		extends DLAbstractAutoMappingImgPlusValueToTensorConverterFactory<DLWritableFloatBuffer> {
 
 	@Override
 	public Class<DLWritableFloatBuffer> getBufferType() {

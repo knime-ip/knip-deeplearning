@@ -10,12 +10,12 @@ import org.knime.dl.core.data.DLWritableBuffer;
 import org.knime.dl.core.data.convert.DLAbstractTensorDataValueToTensorConverterFactory;
 import org.knime.knip.base.data.img.ImgPlusValue;
 
-abstract class DLAbstractImgPlusValueToTensorConverterFactory <O extends DLWritableBuffer>
+abstract class DLAbstractAutoMappingImgPlusValueToTensorConverterFactory <O extends DLWritableBuffer>
 		extends DLAbstractTensorDataValueToTensorConverterFactory<ImgPlusValue, O> {
 
 	@Override
 	public final String getName() {
-		return ((ExtensibleUtilityFactory) ImgPlusValue.UTILITY).getName();
+		return ((ExtensibleUtilityFactory) ImgPlusValue.UTILITY).getName() + "(Auto-mapping)";
 	}
 
 	@Override
