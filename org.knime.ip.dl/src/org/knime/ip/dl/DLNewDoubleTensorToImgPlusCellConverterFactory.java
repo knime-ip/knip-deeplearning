@@ -9,6 +9,7 @@ import net.imglib2.type.numeric.RealType;
 /**
  * @author Christian Dietz, KNIME, Konstanz, Germany
  * @author Marcel Wiedenmann, KNIME, Konstanz, Germany
+ * @author Adrian Nembach, KNIME, Konstanz, Germany
  */
 public class DLNewDoubleTensorToImgPlusCellConverterFactory extends DLAbstractTensorToImgPlusCellConverterFactory<DLReadableDoubleBuffer> {
 

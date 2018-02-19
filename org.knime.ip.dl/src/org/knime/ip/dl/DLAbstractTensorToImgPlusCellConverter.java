@@ -13,6 +13,14 @@ import org.knime.knip.base.data.img.ImgPlusCellFactory;
 import net.imagej.ImgPlus;
 import net.imglib2.type.numeric.RealType;
 
+/**
+ * Base implementation that implements the conversion in a generic way.
+ * 
+ * @author Adrian Nembach, KNIME GmbH, Konstanz, Germany
+ *
+ * @param <B> the {@link DLReadableBuffer} that backs the tensor
+ * @param <T>
+ */
 abstract class DLAbstractTensorToImgPlusCellConverter <B extends DLReadableBuffer, T extends RealType<T>> implements DLTensorToDataCellConverter<B, ImgPlusCell<?>> {
 	
 	@Override

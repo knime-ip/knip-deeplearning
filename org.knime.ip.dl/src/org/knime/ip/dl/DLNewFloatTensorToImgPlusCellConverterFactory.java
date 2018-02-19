@@ -12,6 +12,7 @@ import net.imglib2.type.numeric.RealType;
 /**
  * @author Christian Dietz, KNIME, Konstanz, Germany
  * @author Marcel Wiedenmann, KNIME, Konstanz, Germany
+ * @author Adrian Nembach, KNIME, Konstanz, Germany
  */
 public class DLNewFloatTensorToImgPlusCellConverterFactory extends DLAbstractTensorToImgPlusCellConverterFactory<DLReadableFloatBuffer>
 		implements DLTensorToDataCellConverterFactory<DLReadableFloatBuffer, ImgPlusCell<?>> {
@@ -24,7 +25,6 @@ public class DLNewFloatTensorToImgPlusCellConverterFactory extends DLAbstractTen
 	@Override
 	protected <T extends RealType<T>> DLTensorToDataCellConverter<DLReadableFloatBuffer, ImgPlusCell<?>> createConverterInternal() {
 		return new DLAbstractTensorToImgPlusCellConverter<DLReadableFloatBuffer, T>() {
-
 
 			@Override
 			protected ImgPlus<T> createImg(DLReadableFloatBuffer buffer, long[] shape, int exampleSize) {
