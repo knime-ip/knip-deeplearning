@@ -17,8 +17,8 @@ public class DLNewDoubleTensorToImgPlusCellConverterFactory extends DLAbstractTe
 		return DLReadableDoubleBuffer.class;
 	}
 	
-	protected <T extends RealType<T>> DLAbstractTensorToImgPlusCellConverter<DLReadableDoubleBuffer,double[],T> createConverterInternal() {
-		return new DLAbstractTensorToImgPlusCellConverter<DLReadableDoubleBuffer, double[], T>() {
+	protected <T extends RealType<T>> DLAbstractTensorToImgPlusCellConverter<DLReadableDoubleBuffer, T> createConverterInternal() {
+		return new DLAbstractTensorToImgPlusCellConverter<DLReadableDoubleBuffer, T>() {
 
 			@Override
 			protected ImgPlus<T> createImg(DLReadableDoubleBuffer buffer, long[] shape, int exampleSize) {

@@ -13,7 +13,7 @@ import org.knime.knip.base.data.img.ImgPlusCellFactory;
 import net.imagej.ImgPlus;
 import net.imglib2.type.numeric.RealType;
 
-abstract class DLAbstractTensorToImgPlusCellConverter <B extends DLReadableBuffer, A, T extends RealType<T>> implements DLTensorToDataCellConverter<B, ImgPlusCell<?>> {
+abstract class DLAbstractTensorToImgPlusCellConverter <B extends DLReadableBuffer, T extends RealType<T>> implements DLTensorToDataCellConverter<B, ImgPlusCell<?>> {
 	
 	@Override
 	public final void convert(DLTensor<B> input, ImgPlusCell<?>[] output, ExecutionContext exec) {

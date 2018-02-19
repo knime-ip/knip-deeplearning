@@ -23,7 +23,7 @@ public class DLNewFloatTensorToImgPlusCellConverterFactory extends DLAbstractTen
 
 	@Override
 	protected <T extends RealType<T>> DLTensorToDataCellConverter<DLReadableFloatBuffer, ImgPlusCell<?>> createConverterInternal() {
-		return new DLAbstractTensorToImgPlusCellConverter<DLReadableFloatBuffer, float[], T>() {
+		return new DLAbstractTensorToImgPlusCellConverter<DLReadableFloatBuffer, T>() {
 
 
 			@Override
