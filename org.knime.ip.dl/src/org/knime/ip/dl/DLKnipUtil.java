@@ -46,7 +46,9 @@ final class DLKnipUtil {
 		assert imgShape.length == mapping.length;
 		long[] mappedShape = new long[imgShape.length];
 		for (int i = 0; i < mappedShape.length; i++) {
-			mappedShape[i] = imgShape[mapping[i]];
+			// in KNIP the last dimension changes the slowest (e.g. C in XYC) while
+			// in deep learning (especially TensorFlow) the last dimension changes the fastest.
+			mappedShape[i] = imgShape[imgShape.length - mapping[i] - 1];
 		}
 		return mappedShape;
 	}
