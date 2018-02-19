@@ -9,9 +9,21 @@
       <DLTensorToDataCellConverterFactory
             DLTensorToDataCellConverterFactory="org.knime.ip.dl.DLFloatTensorToImgPlusCellConverterFactory">
       </DLTensorToDataCellConverterFactory>
+      <DLTensorToDataCellConverterFactory
+            DLTensorToDataCellConverterFactory="org.knime.ip.dl.DLNewFloatTensorToImgPlusCellConverterFactory">
+      </DLTensorToDataCellConverterFactory>
+      <DLTensorToDataCellConverterFactory
+            DLTensorToDataCellConverterFactory="org.knime.ip.dl.DLNewDoubleTensorToImgPlusCellConverterFactory">
+      </DLTensorToDataCellConverterFactory>
    </extension>
    <extension
          point="org.knime.dl.DLDataValueToTensorConverterFactory">
+      <DLDataValueToTensorConverterFactory
+            DLDataValueToTensorConverterFactory="org.knime.ip.dl.DLAutoMappingImgPlusValueToDoubleTensorConverterFactory">
+      </DLDataValueToTensorConverterFactory>
+      <DLDataValueToTensorConverterFactory
+            DLDataValueToTensorConverterFactory="org.knime.ip.dl.DLAutoMappingImgPlusValueToFloatTensorConverterFactory">
+      </DLDataValueToTensorConverterFactory>
       <DLDataValueToTensorConverterFactory
             DLDataValueToTensorConverterFactory="org.knime.ip.dl.DLImgPlusValueToDoubleTensorConverterFactory">
       </DLDataValueToTensorConverterFactory>
