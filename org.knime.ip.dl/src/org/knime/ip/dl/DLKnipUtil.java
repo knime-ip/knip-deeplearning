@@ -81,4 +81,12 @@ final class DLKnipUtil {
 			throw new IllegalArgumentException("Unknown axis '" + axis.type().getLabel() + "' encountered.");
 		}
 	}
+	
+	static long[] reverseShape(long[] shape) {
+		long[] reversedShape = new long[shape.length];
+		for (int i = 0; i < shape.length; i++) {
+			reversedShape[i] = shape[shape.length - i - 1];
+		}
+		return reversedShape;
+	}
 }
