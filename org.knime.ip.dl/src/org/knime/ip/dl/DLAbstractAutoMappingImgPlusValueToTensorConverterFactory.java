@@ -10,12 +10,19 @@ import org.knime.dl.core.data.DLWritableBuffer;
 import org.knime.dl.core.data.convert.DLAbstractTensorDataValueToTensorConverterFactory;
 import org.knime.knip.base.data.img.ImgPlusValue;
 
+/**
+ * Handles the shape inference from data with auto-mapping.
+ * 
+ * @author Adrian Nembach, KNIME GmbH, Konstanz, Germany
+ *
+ * @param <O> type of the {@link DLWritableBuffer} the converters produced by this factory fill
+ */
 abstract class DLAbstractAutoMappingImgPlusValueToTensorConverterFactory <O extends DLWritableBuffer>
 		extends DLAbstractTensorDataValueToTensorConverterFactory<ImgPlusValue, O> {
 
 	@Override
 	public final String getName() {
-		return ((ExtensibleUtilityFactory) ImgPlusValue.UTILITY).getName() + "(Auto-mapping)";
+		return ((ExtensibleUtilityFactory) ImgPlusValue.UTILITY).getName() + " (Auto-mapping)";
 	}
 
 	@Override

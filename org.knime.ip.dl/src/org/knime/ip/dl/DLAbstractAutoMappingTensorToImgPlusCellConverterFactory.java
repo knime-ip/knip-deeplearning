@@ -11,13 +11,13 @@ import org.knime.knip.base.data.img.ImgPlusCell;
 
 import net.imglib2.type.numeric.RealType;
 
-abstract class DLAbstractTensorToImgPlusCellConverterFactory<B extends DLReadableBuffer> implements
+abstract class DLAbstractAutoMappingTensorToImgPlusCellConverterFactory<B extends DLReadableBuffer> implements
 DLTensorToDataCellConverterFactory<B, ImgPlusCell<?>> {
 	private static final OptionalLong DEST_COUNT = OptionalLong.of(1);
 
 	@Override
 	public final String getName() {
-		return DataType.getType(ImgPlusCell.class).toPrettyString();
+		return DataType.getType(ImgPlusCell.class).toPrettyString() + " (Auto-mapping)";
 	}
 	
 	@Override

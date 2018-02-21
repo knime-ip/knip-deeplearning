@@ -16,12 +16,14 @@ import net.imglib2.type.numeric.RealType;
 /**
  * Base implementation that implements the conversion in a generic way.
  * 
+ * Dimension auto-mapping is not yet implemented but will be in the future.
+ * 
  * @author Adrian Nembach, KNIME GmbH, Konstanz, Germany
  *
  * @param <B> the {@link DLReadableBuffer} that backs the tensor
- * @param <T>
+ * @param <T> needed for type-safety reasons
  */
-abstract class DLAbstractTensorToImgPlusCellConverter <B extends DLReadableBuffer, T extends RealType<T>> implements DLTensorToDataCellConverter<B, ImgPlusCell<?>> {
+abstract class DLAbstractAutoMappingTensorToImgPlusCellConverter <B extends DLReadableBuffer, T extends RealType<T>> implements DLTensorToDataCellConverter<B, ImgPlusCell<?>> {
 	
 	@Override
 	public final void convert(DLTensor<B> input, ImgPlusCell<?>[] output, ExecutionContext exec) {

@@ -17,9 +17,9 @@ import net.imglib2.view.Views;
  * @author Adrian Nembach, KNIME GmbH, Konstanz, Germany
  *
  * @param <VIA> the buffer type
- * @param <T>
+ * @param <T> needed for type-safety reasons
  */
-public abstract class DLAbstractImgPlusValueToTensorConverter <VIA extends DLWritableBuffer, T extends RealType<T>> 
+public abstract class DLAbstractAutoMappingImgPlusValueToTensorConverter <VIA extends DLWritableBuffer, T extends RealType<T>> 
 extends DLAbstractTensorDataValueToTensorConverter<ImgPlusValue, VIA> {
 
 	@Override

@@ -25,7 +25,7 @@ public class DLAutoMappingImgPlusValueToFloatTensorConverterFactory <T extends R
 	@Override
 	public DLDataValueToTensorConverter<ImgPlusValue, DLWritableFloatBuffer> createConverter() {
 		
-		return new DLAbstractImgPlusValueToTensorConverter<DLWritableFloatBuffer, T>() {
+		return new DLAbstractAutoMappingImgPlusValueToTensorConverter<DLWritableFloatBuffer, T>() {
 
 			@Override
 			protected void fillWith(DLWritableFloatBuffer buffer, Cursor<T> cursor) {

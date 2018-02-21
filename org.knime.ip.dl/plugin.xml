@@ -10,10 +10,10 @@
             DLTensorToDataCellConverterFactory="org.knime.ip.dl.DLFloatTensorToImgPlusCellConverterFactory">
       </DLTensorToDataCellConverterFactory>
       <DLTensorToDataCellConverterFactory
-            DLTensorToDataCellConverterFactory="org.knime.ip.dl.DLNewFloatTensorToImgPlusCellConverterFactory">
+            DLTensorToDataCellConverterFactory="org.knime.ip.dl.DLAutoMappingFloatTensorToImgPlusCellConverterFactory">
       </DLTensorToDataCellConverterFactory>
       <DLTensorToDataCellConverterFactory
-            DLTensorToDataCellConverterFactory="org.knime.ip.dl.DLNewDoubleTensorToImgPlusCellConverterFactory">
+            DLTensorToDataCellConverterFactory="org.knime.ip.dl.DLAutoMappingDoubleTensorToImgPlusCellConverterFactory">
       </DLTensorToDataCellConverterFactory>
    </extension>
    <extension

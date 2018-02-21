@@ -11,15 +11,15 @@ import net.imglib2.type.numeric.RealType;
  * @author Marcel Wiedenmann, KNIME, Konstanz, Germany
  * @author Adrian Nembach, KNIME, Konstanz, Germany
  */
-public class DLNewDoubleTensorToImgPlusCellConverterFactory extends DLAbstractTensorToImgPlusCellConverterFactory<DLReadableDoubleBuffer> {
+public class DLAutoMappingDoubleTensorToImgPlusCellConverterFactory extends DLAbstractAutoMappingTensorToImgPlusCellConverterFactory<DLReadableDoubleBuffer> {
 
 	@Override
 	public Class<DLReadableDoubleBuffer> getBufferType() {
 		return DLReadableDoubleBuffer.class;
 	}
 	
-	protected <T extends RealType<T>> DLAbstractTensorToImgPlusCellConverter<DLReadableDoubleBuffer, T> createConverterInternal() {
-		return new DLAbstractTensorToImgPlusCellConverter<DLReadableDoubleBuffer, T>() {
+	protected <T extends RealType<T>> DLAbstractAutoMappingTensorToImgPlusCellConverter<DLReadableDoubleBuffer, T> createConverterInternal() {
+		return new DLAbstractAutoMappingTensorToImgPlusCellConverter<DLReadableDoubleBuffer, T>() {
 
 			@Override
 			protected ImgPlus<T> createImg(DLReadableDoubleBuffer buffer, long[] shape, int exampleSize) {

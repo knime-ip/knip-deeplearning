@@ -23,7 +23,7 @@ public final class DLAutoMappingImgPlusValueToDoubleTensorConverterFactory <T ex
 
 	@Override
 	public DLDataValueToTensorConverter<ImgPlusValue, DLWritableDoubleBuffer> createConverter() {
-		return new DLAbstractImgPlusValueToTensorConverter<DLWritableDoubleBuffer, T>() {
+		return new DLAbstractAutoMappingImgPlusValueToTensorConverter<DLWritableDoubleBuffer, T>() {
 
 			@Override
 			protected void fillWith(DLWritableDoubleBuffer buffer, Cursor<T> cursor) {
