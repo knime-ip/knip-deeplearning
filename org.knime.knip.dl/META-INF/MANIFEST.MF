@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KNIME Image Processing - Deep Learning
-Bundle-SymbolicName: org.knime.ip.dl;singleton:=true
+Bundle-SymbolicName: org.knime.knip.dl;singleton:=true
 Bundle-Version: 0.0.1.qualifier
-Bundle-Vendor: KNIME.com GmbH
+Bundle-Vendor: KNIME GmbH
 Require-Bundle: org.knime.knip.base;bundle-version="1.5.0",
  scijava-common;bundle-version="2.47.0",
  imagej-common;bundle-version="0.18.0",
