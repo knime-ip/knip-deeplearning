@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature id="org.knime.knip.dl.feature" version="0.0.0">
+       <category name="knip-dl" />
+   </feature>
+
+   <category-def name="knip-dl" label="Build artifacts from knip-deeplearning">
+       <description>Build artifacts from knip-deeplearning </description>
+   </category-def>
+</site>
